@@ -1,0 +1,115 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+    <link rel="stylesheet" href="/plugins/leaflet.mousecoordinate.css" />
+    <link rel="stylesheet" href="/plugins/legend.css">
+
+    <title>Document</title>
+</head>
+<body class="easyPrint">
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+    <script src="/plugins/leaflet.mousecoordinate.js"></script>
+    <script src="/plugins/bundle.js"></script>
+    
+  
+    <style>
+     
+ 
+
+   html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #map {
+        height: 100%;
+    } 
+    
+    </style>
+    <script>
+
+   // Initialize the map and Centring it
+var map = L.map('map', {
+    
+    center: [32.3013, -4.68045],
+    
+    zoom: 9
+});
+
+// MAPS
+var openStreetMap = new L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+var baseMaps = {
+    "OpenStreet map": openStreetMap,
+    
+};
+
+
+
+// ----------
+var CLLayer;
+ CLLayer = L.imageOverlay('Cl.png',[[32.5926601333,-5.46588809631],[31.9348601333,-4.14768809631]]).addTo(map);
+ var NO3Layer; 
+ NO3Layer = L.imageOverlay('NO3.png',[[32.5926601333,-5.46588809631],[31.9348601333,-4.14768809631]]).addTo(map);
+var overlayMaps = {
+ 'Cl':NO3Layer,
+ 'NO3':CLLayer,
+    
+};
+CLLayer.setOpacity(0.6);
+NO3Layer.setOpacity(0.6);
+//Controls
+//map controls
+L.control.layers(baseMaps).addTo(map);
+L.control.layers(overlayMaps).addTo(map);
+//Scale control
+L.control.scale().addTo(map);
+//Fullscreen control
+map.addControl(new L.Control.Fullscreen());
+//Mouse cors control
+L.control.mouseCoordinate({gpsLong: true}).addTo(map);
+/*Legend specific*/
+var legend = L.control({position: 'bottomleft'});
+    legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'legend');
+div.innerHTML += "<h4>Cl (mg/l)</h4>";
+  div.innerHTML += '<i class="icon"  style="background: #00b3e2"></i><span>5 - 200</span><br>';
+  div.innerHTML += '<i class="icon" style="background: #e6e600"></i><span>300 - 750</span><br>';
+  div.innerHTML += '<i class="icon" style="background: #e201b3"></i><span>1000 - 5650</span><br>';
+  
+  div.innerHTML += "<h4>NO3 (mg/l)</h4>";
+  div.innerHTML += '<i class="icon"  style="background: #025fe2"></i><span>0.5 - 5</span><br>';
+  div.innerHTML += '<i class="icon" style="background: #50e300"></i><span>5 - 25</span><br>';
+  div.innerHTML += '<i class="icon" style="background: #e2e300"></i><span>25 - 40</span><br>';
+
+
+return div;
+};
+
+legend.addTo(map);
+
+
+var printer = L.easyPrint({
+      		
+      		sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
+      		filename: 'myMap',
+      		exportOnly: true,
+      		hideControlContainer: false
+		}).addTo(map);
+
+		
+    </script>
+    
+</body>
+</html>
+
+   
